@@ -18,9 +18,9 @@ class GolSerializer(serializers.ModelSerializer):
         if partido:
             if partido.torneo.cerrado:
                 raise serializers.ValidationError('El torneo esta cerrado.')
-            if partido.estado != 'EN_JUEGO':
+            if partido.estado != 'En juego':
                 raise serializers.ValidationError(
-                    f"No se pueden registrar goles en partidos '{partido.estado}'. Debe estar 'EN_JUEGO'."
+                    f"No se pueden registrar goles en partidos '{partido.estado}'. Debe estar 'En juego'."
                 )
             if not equipo and jugador:
                 equipo = jugador.equipo
