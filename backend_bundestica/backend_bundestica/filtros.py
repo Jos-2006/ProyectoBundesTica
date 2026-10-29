@@ -1,10 +1,9 @@
-
-
 from datetime import date
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import BaseFilterBackend
 
+#Aqui lo que hacemos es definir los diferentes filtros que tenemos en el codigo.
 
 def convertir_valor(nombre, valor, tipo):
 

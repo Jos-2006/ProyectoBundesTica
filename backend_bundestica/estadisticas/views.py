@@ -1,5 +1,6 @@
 """
-Módulo de estadísticas: SOLO LECTURA y SOLO de torneos FINALIZADOS.
+Módulo de estadísticas: Solo permitira lectura, lo que significa que creara las tablas con el resumen, de solo los torneos finalizados
+Urls guia de postman:
 
 - /api/estadisticas/partidos/                    partidos jugados de torneos finalizados
 - /api/estadisticas/torneos/                     torneos finalizados con su campeón
@@ -29,9 +30,6 @@ from .servicios import tabla_ordenada
 class PartidoJugadoViewSet(ConfiguracionApi, viewsets.ReadOnlyModelViewSet):
     """
     Partidos jugados en torneos finalizados.
-
-    Filtros:  ?torneo=1 ?equipo=2 ?resultado=EMPATE|GANA_LOCAL|GANA_VISITANTE
-    Orden:    ?ordering=fecha | -total_goles
     """
 
     serializer_class = PartidoJugadoSerializer

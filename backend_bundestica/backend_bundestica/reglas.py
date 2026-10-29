@@ -1,7 +1,6 @@
-
-
 from django.core.exceptions import ValidationError as ErrorDjango
 
+ #Aqui se traduce los errores de los servicios hacia los paneles de administración
 
 def aplanar_mensajes(detalle):
     if isinstance(detalle, dict):

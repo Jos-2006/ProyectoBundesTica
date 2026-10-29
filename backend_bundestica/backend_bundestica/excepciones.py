@@ -1,5 +1,5 @@
 """
-Manejo de errores.
+Manejo de errores de las clases
 
 - 400: datos inválidos o regla de negocio incumplida.
 - 401: no se envió token o es inválido.

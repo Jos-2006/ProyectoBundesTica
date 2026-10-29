@@ -3,10 +3,7 @@ from rest_framework import serializers
 
 class RelacionConOpciones(serializers.PrimaryKeyRelatedField):
     """
-    Campo de relación que en el formulario (API navegable / OPTIONS) solo
-    ofrece las opciones válidas (por ejemplo, torneos con inscripciones
-    abiertas), pero acepta cualquier id existente para que la regla de
-    negocio responda con un mensaje claro en vez de "clave inválida".
+  Esto nos va a permitir mostrar en el formulario solo opciones validas, pero antes de todo valida los id para brindar una respuesta clara
     """
 
     def __init__(self, opciones=None, **kwargs):

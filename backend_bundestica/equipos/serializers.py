@@ -5,7 +5,7 @@ from inscripciones.models import Inscripcion
 
 from .models import Equipo, Jugador
 
-
+#no importa si pone la identificación con los numeros pegados, segarados, o con 1-45, el sistema los lee como una sola
 def normalizar_identificacion(valor):
     """'1-1111-1111', ' 111111111 ' y '1 1111 1111' son la misma persona."""
     return ''.join(caracter for caracter in str(valor).upper() if caracter.isalnum())
@@ -47,7 +47,6 @@ class JugadorSerializer(serializers.ModelSerializer):
             'posicion', 'posicion_nombre', 'equipo', 'nombre_equipo',
             'goles_totales',
         ]
-        # Las unicidades se validan a mano con mensajes claros.
         validators = []
         extra_kwargs = {'identificacion': {'validators': []}}
 
@@ -77,7 +76,7 @@ class JugadorSerializer(serializers.ModelSerializer):
         equipo = datos.get('equipo', getattr(self.instance, 'equipo', None))
         numero = datos.get('numero_camiseta', getattr(self.instance, 'numero_camiseta', None))
 
-        # Regla: número de camiseta único dentro del equipo (también en PATCH).
+        # Regla: número de camiseta único dentro del equipo.
         repetidos = Jugador.objects.filter(equipo=equipo, numero_camiseta=numero)
         if self.instance:
             repetidos = repetidos.exclude(pk=self.instance.pk)
