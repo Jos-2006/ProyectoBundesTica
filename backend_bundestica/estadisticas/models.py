@@ -1,23 +1,50 @@
 from django.db import models
-from torneos.models import Torneo
-from equipos.models import Equipo
 
 
 class Estadistica(models.Model):
-    torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='estadisticas')
-    equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, related_name='estadisticas')
-    pj = models.IntegerField(default=0)
-    pg = models.IntegerField(default=0)
-    pe = models.IntegerField(default=0)
-    pp = models.IntegerField(default=0)
-    gf = models.IntegerField(default=0)
-    gc = models.IntegerField(default=0)
-    dg = models.IntegerField(default=0)
-    pts = models.IntegerField(default=0)
+    """
+    Fila de la tabla de posiciones de un equipo dentro de un torneo.
+
+    No se edita a mano: se recalcula cada vez que se finaliza un partido
+    (ver estadisticas/servicios.py).
+    """
+
+    torneo = models.ForeignKey(
+        'torneos.Torneo',
+        on_delete=models.CASCADE,
+        related_name='estadisticas',
+    )
+    equipo = models.ForeignKey(
+        'equipos.Equipo',
+        on_delete=models.PROTECT,
+        related_name='estadisticas',
+    )
+
+    partidos_jugados = models.PositiveSmallIntegerField(default=0)
+    partidos_ganados = models.PositiveSmallIntegerField(default=0)
+    partidos_empatados = models.PositiveSmallIntegerField(default=0)
+    partidos_perdidos = models.PositiveSmallIntegerField(default=0)
+    goles_a_favor = models.PositiveSmallIntegerField(default=0)
+    goles_en_contra = models.PositiveSmallIntegerField(default=0)
+    diferencia_goles = models.SmallIntegerField(default=0)
+    puntos = models.PositiveSmallIntegerField(default=0)
+
+    # Criterio de desempate de la tabla.
+    ORDEN_TABLA = [
+        '-puntos', '-diferencia_goles', '-goles_a_favor',
+        '-partidos_ganados', 'equipo__nombre',
+    ]
 
     class Meta:
-        unique_together = ('torneo', 'equipo')
-        ordering = ['-pts', '-dg', '-gf']
+        ordering = ['torneo', '-puntos', '-diferencia_goles', '-goles_a_favor']
+        verbose_name = 'posición en la tabla'
+        verbose_name_plural = 'tablas de torneos finalizados'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['torneo', 'equipo'],
+                name='estadistica_unica_por_equipo_y_torneo',
+            ),
+        ]
 
     def __str__(self):
-        return f"{self.equipo.nombre} - {self.pts} pts (PJ:{self.pj} DIF:{self.dg})"
+        return f'{self.equipo} - {self.puntos} pts ({self.torneo})'
