@@ -1,27 +1,30 @@
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import include, path
+
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.routers import DefaultRouter
 
-from torneos.views import TorneoViewSet
 from equipos.views import EquipoViewSet, JugadorViewSet
-from inscripciones.views import TorneoEquipoViewSet, TorneoJugadorViewSet
-from partidos.views import PartidoViewSet, GolViewSet
-from estadisticas.views import TablaPosicionesView, TablaGoleadoresView
+from estadisticas.views import EstadisticaTorneoViewSet, PartidoJugadoViewSet
+from inscripciones.views import InscripcionViewSet
+from partidos.views import PartidoViewSet, ResultadoViewSet
+from torneos.views import TorneoViewSet
 
-router = DefaultRouter()
-router.register(r'torneos', TorneoViewSet)
-router.register(r'equipos', EquipoViewSet)
-router.register(r'jugadores', JugadorViewSet)
-router.register(r'inscripciones-equipos', TorneoEquipoViewSet)
-router.register(r'inscripciones-jugadores', TorneoJugadorViewSet)
-router.register(r'partidos', PartidoViewSet)
-router.register(r'goles', GolViewSet)
+
+enrutador = DefaultRouter()
+
+enrutador.register('equipos', EquipoViewSet, basename='equipo')
+enrutador.register('jugadores', JugadorViewSet, basename='jugador')
+enrutador.register('torneos', TorneoViewSet, basename='torneo')
+enrutador.register('inscripciones', InscripcionViewSet, basename='inscripcion')
+enrutador.register('partidos', PartidoViewSet, basename='partido')
+enrutador.register('goles', ResultadoViewSet, basename='gol')
+enrutador.register('estadisticas/partidos', PartidoJugadoViewSet, basename='estadistica-partido')
+enrutador.register('estadisticas/torneos', EstadisticaTorneoViewSet, basename='estadistica-torneo')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/token/', obtain_auth_token, name='api_token_auth'),
-    path('api/', include(router.urls)),
-    path('api/torneos/<int:torneo_id>/tabla-posiciones/', TablaPosicionesView.as_view(), name='tabla_posiciones'),
-    path('api/torneos/<int:torneo_id>/tabla-goleadores/', TablaGoleadoresView.as_view(), name='tabla_goleadores'),
+    path('api/auth/token/', obtain_auth_token, name='obtener_token'),
+    path('api/', include(enrutador.urls)),
 ]
