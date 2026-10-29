@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import F, Q
 
-
+#clase model de partido
 class Partido(models.Model):
     """
     Enfrentamiento entre dos equipos inscritos en un torneo.
