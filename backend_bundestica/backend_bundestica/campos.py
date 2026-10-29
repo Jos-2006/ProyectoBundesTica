@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 class RelacionConOpciones(serializers.PrimaryKeyRelatedField):
     """
-  Esto nos va a permitir mostrar en el formulario solo opciones validas, pero antes de todo valida los id para brindar una respuesta clara
+    Esto nos va a permitir mostrar en el formulario solo opciones validas, pero antes de todo valida los id para brindar una respuesta clara
     """
 
     def __init__(self, opciones=None, **kwargs):

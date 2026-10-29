@@ -49,7 +49,6 @@ Para activar MySQL desde PowerShell:
 
 `$env:USE_MYSQL="True"`
 
-
 ## 4. Migraciones y usuarios
 
 Una vez configurada la base de datos, se deben ejecutar las migraciones para crear las tablas necesarias:
@@ -129,7 +128,6 @@ Todas estas operaciones pueden realizarse desde el panel de administración de D
 ### Principales rutas de la API
 
 | Función | Ruta |
-|---|---|
 | Registrar equipos | POST /api/equipos/ |
 | Registrar jugadores | POST /api/jugadores/ |
 | Crear torneos | POST /api/torneos/ |
