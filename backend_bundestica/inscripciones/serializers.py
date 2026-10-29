@@ -1,42 +1,80 @@
 from rest_framework import serializers
-from .models import TorneoEquipo, TorneoJugador
+
+from django.db.models import Count, F
+
+from backend_bundestica.campos import RelacionConOpciones
+from equipos.serializers import JugadorResumenSerializer
+from torneos.models import Torneo
+
+from .models import Inscripcion
 
 
-class TorneoEquipoSerializer(serializers.ModelSerializer):
+class InscripcionSerializer(serializers.ModelSerializer):
+    """
+    Solo se inscriben EQUIPOS. La respuesta muestra los jugadores con los
+    que el equipo participa (solo lectura).
+    """
+
+    # En el formulario solo aparecen torneos con inscripciones abiertas y cupo.
+    torneo = RelacionConOpciones(
+        queryset=Torneo.objects.all(),
+        opciones=Torneo.objects.annotate(inscritos=Count('inscripciones'))
+        .filter(estado=Torneo.Estado.INSCRIPCIONES, inscritos__lt=F('maximo_equipos')),
+    )
+    nombre_torneo = serializers.CharField(source='torneo.nombre', read_only=True)
+    estado_torneo = serializers.CharField(source='torneo.estado', read_only=True)
+    nombre_equipo = serializers.CharField(source='equipo.nombre', read_only=True)
+    jugadores = JugadorResumenSerializer(source='equipo.jugadores', many=True, read_only=True)
+
     class Meta:
-        model = TorneoEquipo
-        fields = '__all__'
+        model = Inscripcion
+        fields = [
+            'id', 'torneo', 'nombre_torneo', 'estado_torneo', 'equipo', 'nombre_equipo',
+            'fecha_inscripcion', 'jugadores',
+        ]
+        read_only_fields = ['fecha_inscripcion']
+     
+        validators = []
 
-    def validate(self, attrs):
-        torneo = attrs.get('torneo', getattr(self.instance, 'torneo', None))
-        if torneo and torneo.cerrado:
-            raise serializers.ValidationError('No se pueden inscribir equipos en un torneo cerrado.')
-        return attrs
+    def validate(self, datos):
 
+        torneo = datos.get('torneo', getattr(self.instance, 'torneo', None))
+        equipo = datos.get('equipo', getattr(self.instance, 'equipo', None))
 
-class TorneoJugadorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TorneoJugador
-        fields = '__all__'
+        if self.instance and torneo.pk != self.instance.torneo_id:
+            raise serializers.ValidationError(
+                {'torneo': 'No se puede mover una inscripción a otro torneo; '
+                           'elimínala y crea una nueva.'}
+            )
 
-    def validate(self, attrs):
-        torneo = attrs.get('torneo', getattr(self.instance, 'torneo', None))
-        equipo = attrs.get('equipo', getattr(self.instance, 'equipo', None))
-        jugador = attrs.get('jugador', getattr(self.instance, 'jugador', None))
+        # Regla: solo se inscribe con inscripciones abiertas.
+        if torneo.estado != Torneo.Estado.INSCRIPCIONES:
+            raise serializers.ValidationError(
+                {'torneo': 'Las inscripciones de este torneo están cerradas.'}
+            )
 
-        if torneo and torneo.cerrado:
-            raise serializers.ValidationError('No se pueden inscribir jugadores en un torneo cerrado.')
-
-        if not TorneoEquipo.objects.filter(torneo=torneo, equipo=equipo).exists():
-            raise serializers.ValidationError({'equipo': 'El equipo no esta inscrito en este torneo.'})
-
-        if jugador and jugador.equipo_id != equipo.id:
-            raise serializers.ValidationError({'jugador': 'El jugador no pertenece a la plantilla de este equipo.'})
-
-        qs = TorneoJugador.objects.filter(torneo=torneo, jugador=jugador)
+        otras = Inscripcion.objects.filter(torneo=torneo)
         if self.instance:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise serializers.ValidationError({'jugador': 'El jugador ya esta inscrito en este torneo con otro equipo.'})
+            otras = otras.exclude(pk=self.instance.pk)
 
-        return attrs
+        # Regla: un equipo no se inscribe dos veces en el mismo torneo.
+        if otras.filter(equipo=equipo).exists():
+            raise serializers.ValidationError(
+                {'equipo': 'Este equipo ya está inscrito en el torneo.'}
+            )
+
+        # Regla: máximo de inscripciones por torneo.
+        if self.instance is None and otras.count() >= torneo.maximo_equipos:
+            raise serializers.ValidationError(
+                {'torneo': f'El torneo ya alcanzó su máximo de {torneo.maximo_equipos} equipos.'}
+            )
+
+        # Regla: el equipo debe tener la plantilla mínima.
+        cantidad = equipo.jugadores.count()
+        if cantidad < torneo.minimo_jugadores_por_equipo:
+            raise serializers.ValidationError(
+                {'equipo': f'El equipo tiene {cantidad} jugador(es); el torneo exige al menos '
+                           f'{torneo.minimo_jugadores_por_equipo}.'}
+            )
+
+        return datos
