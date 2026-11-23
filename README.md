@@ -35,7 +35,9 @@ Desde la raíz del proyecto, ejecutamos en la primera terminal:
 ```powershell
 cd backend_bundestica
 python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
+activamos el entorno
+.venv\Scripts\Activate.ps1 
+python -m pip install -r requirements.txt
 
 $env:USE_MYSQL = "True"
 $env:MYSQL_DATABASE = "Bundestica"
