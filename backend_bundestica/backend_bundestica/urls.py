@@ -9,6 +9,7 @@ from estadisticas.views import EstadisticaTorneoViewSet, PartidoJugadoViewSet
 from inscripciones.views import InscripcionViewSet
 from partidos.views import PartidoViewSet, ResultadoViewSet
 from torneos.views import TorneoViewSet
+from backend_bundestica.sesion import perfil_usuario
 
 
 enrutador = DefaultRouter()
@@ -26,5 +27,6 @@ enrutador.register('estadisticas/torneos', EstadisticaTorneoViewSet, basename='e
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/token/', obtain_auth_token, name='obtener_token'),
+    path('api/auth/me/', perfil_usuario, name='perfil_usuario'),
     path('api/', include(enrutador.urls)),
 ]
