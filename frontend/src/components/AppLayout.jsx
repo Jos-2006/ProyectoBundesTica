@@ -17,12 +17,15 @@ const secciones = [
 
 // Este componente envuelve todas las pantallas privadas y les deja el mismo encabezado.
 export default function AppLayout() {
+
     // Mostramos el usuario y sus roles tal como los devolvió Django.
     const {username, roles, logout} = useAuth();
     const navigate = useNavigate();
     const { pathname } = useLocation();
+
     // La parte de la URL sirve para aplicar el estilo del módulo que se está consultando.
     const moduloActual = pathname.split('/')[1];
+
     // Al pulsar Salir se borra la sesión y se vuelve directamente al formulario de ingreso.
     function salir() { logout(); navigate('/login', {replace:true}); }
 

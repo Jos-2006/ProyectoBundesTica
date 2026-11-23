@@ -28,6 +28,7 @@ export const filtrosDisponibles = {
         {nombre:'fecha_hasta', etiqueta:'Hasta', tipo:'date'}
     ]
 };
+
 // Los valores guardados aquí corresponden a los campos de ordenamiento que recibe la API.
 export const ordenesDisponibles = {
     equipos:[['nombre','Nombre A-Z'],['-nombre','Nombre Z-A'],['-cantidad_jugadores','Más jugadores']],
@@ -36,10 +37,13 @@ export const ordenesDisponibles = {
     inscripciones:[['-fecha_inscripcion','Más recientes'],['equipo__nombre','Nombre de equipo']],
     partidos:[['fecha','Fecha ascendente'],['-fecha','Fecha descendente']]
 };
+
 // El componente solo recoge lo que el usuario selecciona; la búsqueda real se realiza en el servidor.
 export default function FiltrosListado({modulo, filtros, cambiar, busqueda, setBusqueda, ordenamiento, setOrdenamiento, opciones, limpiar}) {
+
     // Se muestran únicamente los controles que tienen sentido para el módulo actual.
     const filtrosModulo = filtrosDisponibles[modulo] || [];
+
     // El buscador, los selectores y el botón Limpiar comparten la misma distribución en todas las pantallas.
     return <div className="filter-panel row g-2 mb-3">
         <div className="col-md-4"><label className="form-label" htmlFor="buscar-listado">Buscar</label>

@@ -30,11 +30,13 @@ api.interceptors.response.use(
 // Pasamos los errores a mensajes más fáciles de entender en pantalla.
 // Recibimos el error de Axios y lo convertimos en un texto corto que se pueda mostrar en un aviso de Bootstrap.
 export function getError(error) {
+
     // Cuando ni siquiera hay respuesta HTTP, normalmente el servidor está apagado o la conexión falló.
     if (!error.response) {
         if (!error.isAxiosError && error.message) return error.message;
         return 'No se pudo conectar con Django. Comprueba que esté ejecutándose en el puerto 8000.';
     }
+
     // El código HTTP ayuda a distinguir una validación, falta de permisos o un error interno.
     const codigo = error.response.status;
     const titulos = {
@@ -42,9 +44,11 @@ export function getError(error) {
         404: 'Ruta o registro no encontrado', 405: 'Método HTTP no permitido',
         409: 'Conflicto con una regla de negocio', 500: 'Error interno de Django'
     };
+
     // Revisamos el contenido devuelto por Django sin asumir que todos los errores tienen el mismo formato.
     const datos = error.response.data;
     const tipo = error.response.headers?.['content-type'] || '';
+
     // Si la API devuelve una página HTML de error, no la mostramos completa dentro de la interfaz.
     if (tipo.includes('text/html') || (typeof datos === 'string' && /<!doctype html|<html/i.test(datos))) {
         return `${titulos[codigo] || `Error HTTP ${codigo}`}. Comprueba que la URL exista en el backend.`;
@@ -52,6 +56,7 @@ export function getError(error) {
     let detalle = '';
     if (typeof datos === 'string') detalle = datos.slice(0, 400);
     else if (Array.isArray(datos)) detalle = datos.map(String).join(', ');
+
     // Los errores de un serializer pueden venir separados por campo; los juntamos para que el usuario los entienda.
     else if (datos && typeof datos === 'object') {
         detalle = Object.entries(datos).map(([campo, mensaje]) => {
