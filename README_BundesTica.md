@@ -45,8 +45,8 @@ $env:MYSQL_PORT = "3306"
 $claveMySQL = Read-Host "Contraseña de MySQL" -AsSecureString
 $env:MYSQL_PASSWORD = [System.Net.NetworkCredential]::new("", $claveMySQL).Password
 
-.venv\Scripts\python.exe manage.py check
-.venv\Scripts\python.exe manage.py migrate
+python manage.py check
+python manage.py migrate
 ```
 
 Si usamos otro nombre de base, usuario o puerto, cambiamos los valores antes de migrar. `backend_bundestica/.env.example` sirve de referencia para las variables que lee Django. Estas variables se configuran en la terminal que ejecuta el servidor.
