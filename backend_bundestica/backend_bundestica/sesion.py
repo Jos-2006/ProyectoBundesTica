@@ -11,6 +11,7 @@ from .permissions import (
     roles_del_usuario,
 )
 
+# Enviamos a React los datos del usuario autenticado y sus permisos.
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def perfil_usuario(request):
