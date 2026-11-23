@@ -3,7 +3,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-wj8ffs6b3&#vzwo#7$)a6y93_7ov*fy)_#yrp@fonv0pp7@xc='
+# En desarrollo se genera una clave temporal si no se indica una en el entorno.
+# Para el proyecto compartido configura DJANGO_SECRET_KEY de forma privada.
+from django.core.management.utils import get_random_secret_key
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or get_random_secret_key()
 
 DEBUG = True
 
@@ -60,11 +63,11 @@ if USE_MYSQL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'Bundestica',
-            'USER': 'root',
-            'PASSWORD': 'root',
-            'HOST': 'localhost',
-            'PORT': '3306',
+            'NAME': os.environ.get('MYSQL_DATABASE', 'Bundestica'),
+            'USER': os.environ.get('MYSQL_USER', 'root'),
+            'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),
+            'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+            'PORT': os.environ.get('MYSQL_PORT', '3306'),
         }
     }
 else:
