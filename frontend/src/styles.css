@@ -1,0 +1,381 @@
+/* Variables de color y medidas que se reutilizan en todas las pantallas del sistema. */
+:root {
+  --ink: #261e20;
+  --muted: #665a5d;
+  --page: #f6f1e9;
+  --surface: #fffcf7;
+  --line: #ddcfc7;
+  --accent: #852d46;
+  --accent-dark: #641d32;
+  --accent-soft: #f3e0e4;
+  --maroon: #351824;
+  --gold: #f6c96c;
+  --content-width: 1280px;
+  --gutter: clamp(16px, 5vw, 64px);
+}
+
+/* Se aplica el fondo general para no depender del estilo predeterminado del navegador. */
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* Navegación */
+/* El encabezado y el menú mantienen la misma ubicación al cambiar de módulo. */
+.app-header {
+  background: var(--maroon);
+  color: var(--surface);
+  border-top: 4px solid var(--gold);
+}
+
+.header-inner, .section-nav, .page-content {
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 80px;
+  gap: 16px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  font-size: clamp(1.12rem, 3.5vw, 1.5rem);
+  font-weight: 850;
+  letter-spacing: -.06em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: var(--gold);
+  color: var(--maroon);
+  font-size: 1.22rem;
+  border-radius: 50%;
+}
+
+.account { display: flex; align-items: center; gap: clamp(8px, 2vw, 20px); min-width: 0; }
+.user-info { display: grid; min-width: 0; text-align: right; line-height: 1.3; }
+.user-info > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-info strong { font-size: .88rem; }
+.user-info small { color: #e4bfc9; font-size: .74rem; }
+
+.btn-logout {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  --bs-btn-color: var(--surface);
+  --bs-btn-border-color: #966c7b;
+  --bs-btn-hover-color: var(--maroon);
+  --bs-btn-hover-bg: var(--gold);
+  --bs-btn-hover-border-color: var(--gold);
+}
+
+/* En pantallas pequeñas el menú se puede desplazar horizontalmente. */
+.section-nav { display: flex; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #966c7b var(--maroon); }
+.section-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 7px;
+  padding: 12px clamp(9px, 1.15vw, 18px);
+  border-bottom: 3px solid transparent;
+  color: #f2dce2;
+  font-size: .84rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.section-link:hover { background: #4b2635; color: #fff; }
+.section-link.active { color: var(--gold); border-color: var(--gold); }
+.app-header :focus-visible { outline-color: var(--gold); outline-offset: -3px; }
+.page-content { padding-block: clamp(26px, 5vw, 56px) 64px; }
+
+/* Inicio y gráfico de cancha compartido con la pantalla de acceso */
+/* Presentación principal del Dashboard y distribución de sus dos columnas. */
+.dashboard-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  background: var(--maroon);
+  color: var(--surface);
+}
+
+.dashboard-intro { padding: clamp(26px, 5vw, 72px); }
+.dashboard-intro h1, .login-form-wrap h1 {
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  font-weight: 850;
+  letter-spacing: -.075em;
+  line-height: .98;
+  margin: 0 0 20px;
+}
+
+.dashboard-intro p { max-width: 31ch; color: #f2dce2; margin-bottom: 24px; }
+.hero-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  --bs-btn-color: var(--maroon);
+  --bs-btn-bg: var(--gold);
+  --bs-btn-hover-color: var(--maroon);
+  --bs-btn-hover-bg: #ffdf9a;
+}
+
+.dashboard-hero :focus-visible { outline-color: var(--gold); }
+.pitch-art {
+  --marking: #cc962a8a;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  min-height: 180px;
+  background:
+    radial-gradient(ellipse at 70% 35%, #b64a5d60, transparent 65%),
+    repeating-linear-gradient(115deg, #f6c96c08 0 36px, transparent 36px 72px),
+    #67263d;
+}
+
+.pitch-lines {
+  position: relative;
+  width: 73%;
+  max-width: 690px;
+  aspect-ratio: 1.55;
+  border: 1px solid var(--marking);
+  background: linear-gradient(90deg, transparent calc(50% - .5px), var(--marking) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px));
+  transform: rotate(-14deg);
+}
+
+.pitch-lines::before {
+  content: "";
+  position: absolute;
+  width: 22%;
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--marking);
+  border-radius: 50%;
+}
+
+.pitch-lines span { position: absolute; top: 24%; width: 17%; height: 52%; border: 1px solid var(--marking); }
+.pitch-lines span:first-child { left: -1px; }
+.pitch-lines span:last-child { right: -1px; }
+
+.dashboard-modules { margin-top: 34px; }
+.dashboard-modules h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.04em; margin-bottom: 12px; }
+.module-directory { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; border-top: 2px solid var(--maroon); }
+.module-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(10px, 2vw, 18px);
+  min-height: 76px;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.module-entry:hover { background: var(--accent-soft); color: var(--accent-dark); }
+.entry-icon, .panel-heading-icon { display: grid; place-items: center; width: 38px; height: 38px; background: var(--accent-soft); color: var(--accent-dark); }
+.entry-text { display: grid; line-height: 1.3; }
+.entry-text small { color: var(--muted); font-size: .78rem; }
+.entry-value { font-size: 1.48rem; font-variant-numeric: tabular-nums; font-weight: 800; color: var(--accent); }
+
+/* Inicio de sesión */
+/* La pantalla de inicio de sesión tiene su propio diseño, separado del interior del sistema. */
+.login-screen {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  min-height: 100svh;
+  padding: 40px 16px;
+  background: var(--maroon);
+  isolation: isolate;
+}
+
+.login-screen .pitch-art { position: absolute; inset: 0; z-index: -1; }
+.login-screen .pitch-lines { width: 85%; max-width: 1080px; }
+.login-form-area {
+  width: min(100%, 435px);
+  padding: clamp(24px, 6vw, 49px);
+  background: var(--surface);
+  border-top: 6px solid var(--gold);
+  box-shadow: 0 24px 56px #093f7e80;
+}
+
+.login-form-wrap .brand { margin-bottom: 33px; }
+.login-form-wrap h1 { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 26px; }
+.input-icon-wrap { position: relative; }
+.input-icon-wrap > i { position: absolute; top: 50%; left: 13px; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.input-icon-wrap .form-control { padding-left: 39px; }
+.login-submit { min-height: 46px; }
+
+/* Formularios, estados y listados Bootstrap */
+/* Encabezados que identifican visualmente cada módulo. */
+.module-header { display: flex; align-items: center; gap: 16px; padding-bottom: 16px; margin-bottom: 22px; border-bottom: 2px solid var(--maroon); }
+.module-header-icon { display: grid; place-items: center; flex-shrink: 0; width: 52px; height: 52px; background: var(--maroon); color: var(--gold); font-size: 1.36rem; }
+.module-header h1 { margin: 0; font-size: clamp(1.85rem, 4vw, 3.2rem); font-weight: 850; letter-spacing: -.065em; }
+.module-header p { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
+.module-note, .result-notice { padding: 11px 14px; background: #f6e9ce; border-left: 4px solid #a46d13; color: #5a421e; font-size: .88rem; }
+.module-note { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+
+.app-shell .card {
+  --bs-card-bg: var(--surface);
+  --bs-card-color: var(--ink);
+  border: 1px solid var(--line) !important;
+  border-radius: 0;
+  box-shadow: none !important;
+}
+
+.app-shell .card-body { padding: clamp(16px, 2.4vw, 28px) !important; }
+.panel-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 17px; }
+.panel-heading-icon { flex-shrink: 0; }
+.panel-heading h2 { margin: 0; font-size: 1.1rem; font-weight: 790; }
+.panel-heading small { color: var(--muted); }
+
+.form-label { font-size: .83rem; font-weight: 700; color: var(--ink); }
+.form-control, .form-select {
+  min-height: 42px;
+  border-color: #1130e2;
+  border-radius: 3px;
+  background-color: #ffffff;
+  color: var(--ink);
+}
+
+.form-control:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+textarea.form-control { min-height: 100px; }
+
+.btn { --bs-btn-border-radius: 3px; --bs-btn-font-weight: 700; }
+.btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent-dark);
+  --bs-btn-hover-border-color: var(--accent-dark);
+  --bs-btn-active-bg: var(--accent-dark);
+  --bs-btn-active-border-color: var(--accent-dark);
+  --bs-btn-disabled-bg: var(--accent);
+  --bs-btn-disabled-border-color: var(--accent);
+  --bs-btn-focus-shadow-rgb: 133, 45, 70;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--accent-dark);
+  --bs-btn-border-color: #b48694;
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-active-bg: var(--accent-dark);
+  --bs-btn-active-border-color: var(--accent-dark);
+  --bs-btn-focus-shadow-rgb: 133, 45, 70;
+}
+
+.form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.filter-panel, .result-filter-panel { padding: 12px; border: 1px solid var(--line); background: #f8eee7; }
+.filter-clear { min-height: 42px; }
+
+.table-responsive { max-width: 100%; border: 1px solid var(--line); }
+.table {
+  --bs-table-color: var(--ink);
+  --bs-table-bg: var(--surface);
+  --bs-table-border-color: var(--line);
+  --bs-table-striped-bg: #f8efe8;
+  --bs-table-hover-bg: var(--accent-soft);
+  margin-bottom: 0;
+  white-space: nowrap;
+  font-size: .86rem;
+}
+
+.table > :not(caption) > * > * { padding: 11px 13px; }
+.table thead th { background: #ecdce1; color: var(--maroon); font-size: .76rem; font-weight: 800; text-transform: uppercase; letter-spacing: .035em; }
+.table tbody tr:last-child > * { border-bottom: 0; }
+.table .btn { font-size: .75rem; }
+.empty-message { padding: 24px !important; text-align: center; color: var(--muted) !important; }
+
+.pagination-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-top: 14px; }
+.pagination-label { color: var(--muted); font-size: .81rem; }
+.alert { border-radius: 3px; font-size: .9rem; }
+.status-badge { display: inline-block; padding: 4px 8px; border-radius: 3px; color: var(--accent-dark); background: var(--accent-soft); font-size: .75rem; font-weight: 750; }
+.status-badge[data-estado="INSCRIPCIONES"] { color: #6b470e; background: #f8ebcc; }
+.status-badge[data-estado="EN_CURSO"] { color: #254766; background: #e0edfa; }
+.status-badge[data-estado="FINALIZADO"] { color: #24563a; background: #e2efe5; }
+.status-badge[data-estado="PROGRAMADO"] { color: #5a3670; background: #f1e4f9; }
+
+@media (max-width: 640px) {
+  .header-inner { min-height: 66px; }
+  .dashboard-hero, .module-directory { grid-template-columns: 1fr; }
+  .dashboard-hero .pitch-lines { width: 52%; }
+  .module-header-icon { width: 42px; height: 42px; font-size: 1.1rem; }
+}
+
+@media (max-width: 380px) {
+  .header-inner { gap: 8px; }
+  .brand { gap: 7px; }
+  .brand-mark { width: 30px; height: 30px; }
+  .btn-logout { padding-inline: 8px; }
+}
+
+.page-content[data-modulo="equipos"] {
+  --accent: #246624;
+  --accent-dark: #910f80;
+  --accent-soft: #78788a;
+}
+
+.page-content[data-modulo="jugadores"] {
+  --accent: #949c24;
+  --accent-dark: #1ed680;
+  --accent-soft: #e2eefb;
+}
+
+.page-content[data-modulo="torneos"] {
+  --accent: #431381;
+  --accent-dark: #bb1957ea;
+  --accent-soft: #ede5f8;
+}
+
+.page-content[data-modulo="inscripciones"] {
+  --accent: #965313;
+  --accent-dark: #6b380c;
+  --accent-soft: #faebd9;
+}
+
+.page-content[data-modulo="partidos"] {
+  --accent: #166977;
+  --accent-dark: #104b56;
+  --accent-soft: #def1f3;
+}
+
+.page-content[data-modulo="resultados"] {
+  --accent: #8a8b36;
+  --accent-dark: #a014e0;
+  --accent-soft: #f9e3e8;
+}
+
+.page-content[data-modulo="estadisticas"] {
+  --accent: #49579b;
+  --accent-dark: #343e76;
+  --accent-soft: #e8eafa;
+}
+
+.page-content[data-modulo] .module-header {
+  border-bottom-color: var(--accent);
+}
+
+.page-content[data-modulo] .module-header-icon {
+  background: var(--accent-dark);
+  color: #fffffff3;
+}
